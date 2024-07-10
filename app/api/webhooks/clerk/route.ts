@@ -53,7 +53,7 @@ export async function POST(req: Request) {
     const { first_name, username, email_addresses } = evt.data;
 
     if (first_name && username && email_addresses) {
-      createUser({
+      await createUser({
         name: first_name,
         username: username,
         email: email_addresses[0].email_address,
