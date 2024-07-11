@@ -55,9 +55,8 @@ export async function POST(req: Request) {
   if (evt.type === "user.created") {
     const { first_name, username, email_addresses } = evt.data;
 
+    console.log("running");
     if (first_name && username && email_addresses) {
-      console.log("running");
-
       await createUser({
         name: first_name,
         username: username,
