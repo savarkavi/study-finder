@@ -49,6 +49,9 @@ export async function POST(req: Request) {
     });
   }
 
+  const { id } = evt.data;
+  const eventType = evt.type;
+
   if (evt.type === "user.created") {
     const { first_name, username, email_addresses } = evt.data;
 
