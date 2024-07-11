@@ -9,6 +9,8 @@ interface IUser {
 }
 
 export const createUser = async ({ name, username, email }: IUser) => {
+  console.log(name, username, email);
+
   await prisma.user.create({
     data: {
       name,
