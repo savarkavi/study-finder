@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
 import { ClerkProvider } from "@clerk/nextjs";
 import Header from "@/components/Header";
 import { BackgroundGradientAnimation } from "@/components/aceternityui/background-gradient-animation";
@@ -22,17 +21,10 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning={true}>
         <body className={`${inter.className} min-h-screen`}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <BackgroundGradientAnimation className="h-full">
-              <Header />
-              <main className="h-full">{children}</main>
-            </BackgroundGradientAnimation>
-          </ThemeProvider>
+          <BackgroundGradientAnimation>
+            <Header />
+            <main className="">{children}</main>
+          </BackgroundGradientAnimation>
         </body>
       </html>
     </ClerkProvider>

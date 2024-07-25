@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Button } from "./ui/button";
 import Link from "next/link";
+import CreateRoomForm from "./CreateRoomForm";
 
 const anton = Anton({
   weight: "400",
@@ -29,7 +30,10 @@ const Header = () => {
             </Button>
           </SignedOut>
           <SignedIn>
-            <UserButton />
+            <div className="flex items-center gap-4">
+              <CreateRoomForm />
+              <UserButton />
+            </div>
           </SignedIn>
         </div>
       </div>

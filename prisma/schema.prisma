@@ -12,4 +12,15 @@ model User {
   name     String
   username String
   email    String
+  rooms    Room[]
+}
+
+model Room {
+  id          String @id @default(cuid())
+  name        String
+  description String
+  githubLink  String
+  language    String
+  userId      String
+  user        User   @relation(fields: [userId], references: [id])
 }
