@@ -4,6 +4,7 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import Header from "@/components/Header";
 import { BackgroundGradientAnimation } from "@/components/aceternityui/background-gradient-animation";
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,10 +22,11 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning={true}>
         <body className={`${inter.className} min-h-screen`}>
-          <BackgroundGradientAnimation>
-            <Header />
-            <main className="">{children}</main>
-          </BackgroundGradientAnimation>
+          {/* <BackgroundGradientAnimation> */}
+          {/* <Header /> */}
+          <main className="min-h-screen">{children}</main>
+          <Toaster />
+          {/* </BackgroundGradientAnimation> */}
         </body>
       </html>
     </ClerkProvider>

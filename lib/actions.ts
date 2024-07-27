@@ -13,6 +13,7 @@ interface IRoom {
   description: string;
   language: string;
   githubLink: string;
+  userId: string;
 }
 
 export const createUser = async ({ name, username, email }: IUser) => {
@@ -27,19 +28,20 @@ export const createUser = async ({ name, username, email }: IUser) => {
   return user;
 };
 
-// export const createRoom = async ({
-//   name,
-//   description,
-//   language,
-//   githubLink,
-// }: IRoom) => {
-//   await prisma.room.create({
-//     data: {
-//       name,
-//       description,
-//       language,
-//       githubLink,
-// userId:
-//     },
-//   });
-// };
+export const createRoom = async ({
+  name,
+  description,
+  language,
+  githubLink,
+  userId,
+}: IRoom) => {
+  await prisma.room.create({
+    data: {
+      name,
+      description,
+      language,
+      githubLink,
+      userId,
+    },
+  });
+};

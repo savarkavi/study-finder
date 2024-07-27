@@ -28,8 +28,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-// import { createRoom } from "@/lib/actions";
+import { createRoom } from "@/lib/actions";
 import { useUser } from "@clerk/nextjs";
+import toast from "react-hot-toast";
+import { useState } from "react";
+import { Loader } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Room name is required" }).max(50),
@@ -39,6 +42,9 @@ const formSchema = z.object({
 });
 
 const CreateRoomForm = () => {
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -49,18 +55,31 @@ const CreateRoomForm = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    // createRoom({
-    //   name: values.name,
-    //   description: values.desc,
-    //   language: values.language,
-    //   githubLink: values.githubLink,
-    // });
+  const { user } = useUser();
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoading(true);
+
+    try {
+      await createRoom({
+        name: values.name,
+        description: values.desc,
+        language: values.language,
+        githubLink: values.githubLink,
+        userId: user?.publicMetadata.userId as string,
+      });
+      toast.success("Room created");
+      setOpen(false);
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to create the room");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button size="sm">Create Room</Button>
       </DialogTrigger>
@@ -163,7 +182,12 @@ const CreateRoomForm = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit">Create</Button>
+            <Button
+              type="submit"
+              className="flex justify-center items-center w-24"
+            >
+              {loading ? <Loader className="w-4 h-4 animate-spin" /> : "Create"}
+            </Button>
           </form>
         </Form>
       </DialogContent>

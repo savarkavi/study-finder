@@ -13,7 +13,7 @@ const anton = Anton({
 
 const Header = () => {
   return (
-    <div className="bg-black/15 p-2 shadow-lg sticky top-0 z-[999]">
+    <div className="bg-black/25 p-2 shadow-lg sticky top-0 z-[999]">
       <div className="max-w-[1280px] mx-auto flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3">
           <div className="relative w-12 h-12">
