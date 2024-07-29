@@ -38,6 +38,7 @@ const formSchema = z.object({
   name: z.string().min(1, { message: "Room name is required" }).max(50),
   desc: z.string().min(1, { message: "Room description is required" }).max(100),
   language: z.string().min(1, { message: "Select a programming language" }),
+  tags: z.string().optional(),
   githubLink: z.string().min(1, { message: "Githib link is required" }),
 });
 
@@ -51,6 +52,7 @@ const CreateRoomForm = () => {
       name: "",
       desc: "",
       language: "",
+      tags: "",
       githubLink: "",
     },
   });
@@ -60,11 +62,14 @@ const CreateRoomForm = () => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
 
+    const tags = values.tags?.split(", ");
+
     try {
       await createRoom({
         name: values.name,
         description: values.desc,
         language: values.language,
+        tags: tags ? tags : [],
         githubLink: values.githubLink,
         userId: user?.publicMetadata.userId as string,
       });
@@ -94,11 +99,10 @@ const CreateRoomForm = () => {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>Room Name</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
-                  <FormDescription>This is your room name.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -113,9 +117,6 @@ const CreateRoomForm = () => {
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
-                  <FormDescription>
-                    This is your room description.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -133,7 +134,7 @@ const CreateRoomForm = () => {
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select a programming language" />
+                        <SelectValue placeholder="Select your primary programming language" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent className="z-[999]">
@@ -158,9 +159,20 @@ const CreateRoomForm = () => {
                       <SelectItem value="R">R</SelectItem>
                     </SelectContent>
                   </Select>
-                  <FormDescription>
-                    This is the primary programming language.
-                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="tags"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Tags</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder="react, nextJS, mongoDb" />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

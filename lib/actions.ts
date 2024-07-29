@@ -1,6 +1,7 @@
 "use server";
 
 import prisma from "@/db";
+import { revalidatePath } from "next/cache";
 
 interface IUser {
   name: string;
@@ -12,6 +13,7 @@ interface IRoom {
   name: string;
   description: string;
   language: string;
+  tags: string[];
   githubLink: string;
   userId: string;
 }
@@ -32,6 +34,7 @@ export const createRoom = async ({
   name,
   description,
   language,
+  tags,
   githubLink,
   userId,
 }: IRoom) => {
@@ -40,8 +43,11 @@ export const createRoom = async ({
       name,
       description,
       language,
+      tags,
       githubLink,
       userId,
     },
   });
+
+  revalidatePath("/rooms");
 };
