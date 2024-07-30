@@ -43,7 +43,7 @@ const RoomCard = ({ data }: { data: Room }) => {
           <p>Github Repo: {data.githubLink}</p>
         </div>
         <Button variant="secondary" className="mt-8 w-full">
-          Join
+          <Link href={`/room/${data.id}`}>Join</Link>
         </Button>
       </div>
     </BackgroundGradient>
