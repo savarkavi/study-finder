@@ -13,10 +13,9 @@ import {
 } from "@stream-io/video-react-sdk";
 import { useEffect, useState } from "react";
 import "@stream-io/video-react-sdk/dist/css/styles.css";
+import { getToken } from "@/lib/actions";
 
 const apiKey = process.env.NEXT_PUBLIC_STREAM_API_KEY!;
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiY2x6MTNpbHFvMDAwMGlhY2JjeWQ4eDUwYSJ9.ECZO6-eA4fnKeZ2zputvKADy45ZhG5JbUeo3y9bMpvE";
 
 export const VideoPlayer = () => {
   const [client, setClient] = useState<StreamVideoClient | null>(null);
@@ -29,13 +28,18 @@ export const VideoPlayer = () => {
     const userId = user.publicMetadata.userId as string;
     const client = new StreamVideoClient({
       apiKey,
-      user: { id: userId },
-      token,
+      user: { id: userId, name: user.username || userId, image: user.imageUrl },
+      tokenProvider: getToken,
     });
     setClient(client);
     const call = client.call("default", "my-first-call");
     setCall(call);
     call.join({ create: true });
+
+    return () => {
+      client.disconnectUser();
+      setClient(null);
+    };
   }, [user]);
 
   return (

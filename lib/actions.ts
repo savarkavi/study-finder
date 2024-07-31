@@ -1,6 +1,8 @@
 "use server";
 
 import prisma from "@/db";
+import { currentUser } from "@clerk/nextjs/server";
+import { StreamClient } from "@stream-io/node-sdk";
 import { revalidatePath } from "next/cache";
 
 interface IUser {
@@ -50,4 +52,19 @@ export const createRoom = async ({
   });
 
   revalidatePath("/rooms");
+};
+
+export const getToken = async () => {
+  const apiKey = process.env.NEXT_PUBLIC_STREAM_API_KEY!;
+  const secretKey = process.env.STREAM_SECRET!;
+
+  const user = await currentUser();
+  const userId = user?.publicMetadata.userId as string;
+
+  if (!user) throw new Error("User not authenticated");
+
+  const client = new StreamClient(apiKey, secretKey);
+  const token = client.createToken(userId);
+
+  return token;
 };
