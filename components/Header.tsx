@@ -11,15 +11,25 @@ const anton = Anton({
   subsets: ["latin"],
 });
 
-const Header = () => {
+const Header = ({ className }: { className?: string }) => {
   return (
-    <div className="bg-black/25 p-2 shadow-lg sticky top-0 z-[999]">
+    <div
+      className={cn(
+        "bg-black/25 p-2 shadow-lg sticky top-0 z-[999]",
+        className
+      )}
+    >
       <div className="max-w-[1280px] mx-auto flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3">
           <div className="relative w-12 h-12">
             <Image src="/dev-station-logo.svg" alt="logo" fill />
           </div>
-          <h1 className={cn("text-white font-bold text-xl", anton.className)}>
+          <h1
+            className={cn(
+              "text-white font-bold text-xl hidden sm:block",
+              anton.className
+            )}
+          >
             DEV STATION
           </h1>
         </Link>

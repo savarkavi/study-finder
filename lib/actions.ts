@@ -54,6 +54,11 @@ export const createRoom = async ({
   revalidatePath("/rooms");
 };
 
+export const getRoom = async (id: string) => {
+  const room = await prisma.room.findUnique({ where: { id } });
+  return room;
+};
+
 export const getToken = async () => {
   const apiKey = process.env.NEXT_PUBLIC_STREAM_API_KEY!;
   const secretKey = process.env.STREAM_SECRET!;

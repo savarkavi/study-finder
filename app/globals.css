@@ -74,3 +74,11 @@
   --str-video__text-color1: #fff;
   --str-video__border-radius-circle: 15px;
 }
+
+.str-video__generic-menu--item {
+  color: white;
+}
+
+.str-video__participant-details__name {
+  color: white;
+}

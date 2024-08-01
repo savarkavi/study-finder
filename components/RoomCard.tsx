@@ -31,9 +31,9 @@ const RoomCard = ({ data }: { data: Room }) => {
           <p>Primary Language: {data.language}</p>
           <div className="flex gap-2">
             Tags:{" "}
-            {data.tags.map((tag: string) => (
+            {data.tags.map((tag: string, i) => (
               <span
-                key={data.id}
+                key={i}
                 className="px-3 py-1 rounded-3xl bg-[#302b63] text-sm"
               >
                 {tag.trim()}
