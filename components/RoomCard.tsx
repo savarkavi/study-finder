@@ -10,8 +10,15 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useRouter } from "next/navigation";
 
 const RoomCard = ({ data }: { data: Room }) => {
+  const router = useRouter();
+
+  const onTagClick = (tag: string) => {
+    router.push(`/rooms?search=${tag}`);
+  };
+
   return (
     <BackgroundGradient
       className="w-full max-w-[400px] mx-auto"
@@ -26,15 +33,15 @@ const RoomCard = ({ data }: { data: Room }) => {
             </TooltipTrigger>
           </Tooltip>
         </TooltipProvider>
-        <div className="flex flex-col gap-4 mt-8">
+        <div className="flex flex-col gap-4 mt-8 overflow-y-scroll">
           <p className="font-semibold">{data.description}</p>
           <p>Primary Language: {data.language}</p>
-          <div className="flex gap-2">
-            Tags:{" "}
+          <div className="flex flex-wrap gap-2">
             {data.tags.map((tag: string, i) => (
               <span
                 key={i}
-                className="px-3 py-1 rounded-3xl bg-[#302b63] text-sm"
+                className="px-3 py-1 rounded-3xl bg-[#302b63] text-sm cursor-pointer hover:bg-[#24243e]"
+                onClick={() => onTagClick(tag)}
               >
                 {tag.trim()}
               </span>

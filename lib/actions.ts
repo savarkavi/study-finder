@@ -54,6 +54,19 @@ export const createRoom = async ({
   revalidatePath("/rooms");
 };
 
+export const getRooms = async (search?: string) => {
+  const rooms = await prisma.room.findMany();
+
+  if (!search) {
+    return rooms;
+  } else {
+    const filteredRooms = rooms.filter((room) =>
+      room.tags.some((tag) => tag.includes(search))
+    );
+    return filteredRooms;
+  }
+};
+
 export const getRoom = async (id: string) => {
   const room = await prisma.room.findUnique({ where: { id } });
   return room;

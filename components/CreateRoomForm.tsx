@@ -36,7 +36,7 @@ import { Loader } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Room name is required" }).max(50),
-  desc: z.string().min(1, { message: "Room description is required" }).max(100),
+  desc: z.string().min(1, { message: "Room description is required" }).max(250),
   language: z.string().min(1, { message: "Select a programming language" }),
   tags: z.string().optional(),
   githubLink: z.string().min(1, { message: "Githib link is required" }),
@@ -62,7 +62,7 @@ const CreateRoomForm = () => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
 
-    const tags = values.tags?.split(", ");
+    const tags = values.tags?.split(", ").map((tag) => tag.toLowerCase());
 
     try {
       await createRoom({
