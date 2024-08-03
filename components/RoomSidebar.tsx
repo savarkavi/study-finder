@@ -3,7 +3,7 @@ import { GitBranch, Github } from "lucide-react";
 
 const RoomSidebar = ({ room }: { room: Room }) => {
   return (
-    <div className="flex-[20%] text-white border rounded-xl p-8 h-[500px] bg-[#0f0c29] sticky top-0 right-0">
+    <div className="flex-[20%] text-white border rounded-xl p-8 h-[500px] bg-[#0f0c29] sticky top-0 right-0 overflow-y-scroll">
       <div className="flex flex-col gap-8">
         <h1 className="text-4xl font-bold">{room.name}</h1>
         <div className="flex items-center gap-2">

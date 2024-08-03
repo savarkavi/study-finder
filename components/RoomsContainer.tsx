@@ -4,8 +4,6 @@ import { revalidatePath } from "next/cache";
 import { getRooms } from "@/lib/actions";
 
 const RoomsContainer = async ({ search }: { search: string }) => {
-  // console.log(searchParmas);
-
   const rooms = await getRooms(search?.toLowerCase());
 
   if (!rooms || rooms.length === 0) {

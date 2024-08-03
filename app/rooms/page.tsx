@@ -1,7 +1,6 @@
 import Header from "@/components/Header";
 import RoomsContainer from "@/components/RoomsContainer";
 import RoomSearchBar from "@/components/RoomSearchBar";
-import { Search } from "lucide-react";
 
 const RoomsPage = ({
   searchParams: { search },
@@ -13,7 +12,7 @@ const RoomsPage = ({
       <Header className="bg-[#24243e]" />
       <div className="w-full min-h-screen z-[99] flex justify-center">
         <div className="w-full max-w-[1280px] mx-auto mt-16 flex flex-col items-center gap-16 p-4 lg:px-0">
-          <RoomSearchBar />
+          <RoomSearchBar search={search} />
           <RoomsContainer search={search} />
         </div>
       </div>

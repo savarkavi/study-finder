@@ -62,7 +62,7 @@ const CreateRoomForm = () => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
 
-    const tags = values.tags?.split(", ").map((tag) => tag.toLowerCase());
+    const tags = values.tags?.split(", ");
 
     try {
       await createRoom({
@@ -75,6 +75,7 @@ const CreateRoomForm = () => {
       });
       toast.success("Room created");
       setOpen(false);
+      form.reset();
     } catch (error) {
       console.log(error);
       toast.error("Failed to create the room");

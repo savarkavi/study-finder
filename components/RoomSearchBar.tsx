@@ -14,7 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { SearchIcon } from "lucide-react";
+import { SearchIcon, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { getRooms } from "@/lib/actions";
 import { useState } from "react";
@@ -24,7 +24,7 @@ const formSchema = z.object({
   searchQuery: z.string(),
 });
 
-const RoomSearchBar = () => {
+const RoomSearchBar = ({ search }: { search: string }) => {
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -42,37 +42,65 @@ const RoomSearchBar = () => {
     }
   }
 
+  const clearFilterClick = () => {
+    router.push("/rooms");
+    form.reset();
+  };
+
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="w-full max-w-[600px] relative"
-      >
-        <FormField
-          control={form.control}
-          name="searchQuery"
-          render={({ field }) => (
-            <FormItem className="w-full">
-              <FormControl>
-                <Input
-                  placeholder="search a room through keywords like react, nextJS, etc"
-                  {...field}
-                  className="w-full"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button
-          type="submit"
-          className="absolute right-0 top-0 rounded-l-none flex gap-2"
+    <div className="w-full max-w-[600px] flex flex-col gap-6 items-center">
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="w-full max-w-[600px] relative"
         >
-          <SearchIcon className="w-4" />
-          Search
-        </Button>
-      </form>
-    </Form>
+          <FormField
+            control={form.control}
+            name="searchQuery"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormControl>
+                  <Input
+                    placeholder="search a room through keywords like react, nextJS, etc"
+                    {...field}
+                    className="w-full"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button
+            type="submit"
+            className="absolute right-0 top-0 rounded-l-none flex gap-2"
+          >
+            <SearchIcon className="w-4" />
+            Search
+          </Button>
+        </form>
+      </Form>
+      <div className="flex flex-col items-center gap-4">
+        <div className="flex">
+          <Button variant="link" className="text-white text-base">
+            All Rooms
+          </Button>
+          <Button variant="link" className="text-white text-base">
+            My Rooms
+          </Button>
+          <Button variant="link" className="text-white text-base">
+            Favourites
+          </Button>
+        </div>
+        {search && (
+          <div
+            className="text-black flex items-center gap-1 cursor-pointer text-sm bg-white py-1 px-3 rounded-lg"
+            onClick={clearFilterClick}
+          >
+            Clear filters <X className="w-4" />{" "}
+          </div>
+        )}
+      </div>
+    </div>
   );
 };
 

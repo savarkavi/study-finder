@@ -61,7 +61,7 @@ export const getRooms = async (search?: string) => {
     return rooms;
   } else {
     const filteredRooms = rooms.filter((room) =>
-      room.tags.some((tag) => tag.includes(search))
+      room.tags.some((tag) => tag.toLowerCase().includes(search))
     );
     return filteredRooms;
   }
