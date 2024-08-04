@@ -22,11 +22,8 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning={true}>
         <body className={`${inter.className} min-h-screen`}>
-          {/* <BackgroundGradientAnimation> */}
-          {/* <Header /> */}
           <main className="min-h-screen">{children}</main>
           <Toaster />
-          {/* </BackgroundGradientAnimation> */}
         </body>
       </html>
     </ClerkProvider>

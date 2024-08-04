@@ -15,17 +15,19 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { SearchIcon, X } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { getRooms } from "@/lib/actions";
 import { useState } from "react";
 import { Room } from "@prisma/client";
+import Link from "next/link";
 
 const formSchema = z.object({
   searchQuery: z.string(),
 });
 
-const RoomSearchBar = ({ search }: { search: string }) => {
+const RoomSearchBar = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -82,16 +84,16 @@ const RoomSearchBar = ({ search }: { search: string }) => {
       <div className="flex flex-col items-center gap-4">
         <div className="flex">
           <Button variant="link" className="text-white text-base">
-            All Rooms
+            <Link href="/rooms">All Rooms</Link>
           </Button>
           <Button variant="link" className="text-white text-base">
-            My Rooms
+            <Link href="/rooms/my-rooms">My Rooms</Link>
           </Button>
           <Button variant="link" className="text-white text-base">
-            Favourites
+            <Link href="favourites">Favourites</Link>
           </Button>
         </div>
-        {search && (
+        {searchParams.get("search") && (
           <div
             className="text-black flex items-center gap-1 cursor-pointer text-sm bg-white py-1 px-3 rounded-lg"
             onClick={clearFilterClick}

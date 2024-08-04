@@ -1,9 +1,7 @@
-import prisma from "@/db";
 import RoomCard from "./RoomCard";
-import { revalidatePath } from "next/cache";
 import { getRooms } from "@/lib/actions";
 
-const RoomsContainer = async ({ search }: { search: string }) => {
+const AllRoomsContainer = async ({ search }: { search: string }) => {
   const rooms = await getRooms(search?.toLowerCase());
 
   if (!rooms || rooms.length === 0) {
@@ -21,4 +19,4 @@ const RoomsContainer = async ({ search }: { search: string }) => {
   );
 };
 
-export default RoomsContainer;
+export default AllRoomsContainer;

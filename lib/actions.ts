@@ -67,6 +67,11 @@ export const getRooms = async (search?: string) => {
   }
 };
 
+export const getUserRooms = async (userId: string) => {
+  const rooms = await prisma.room.findMany({ where: { userId } });
+  return rooms;
+};
+
 export const getRoom = async (id: string) => {
   const room = await prisma.room.findUnique({ where: { id } });
   return room;
