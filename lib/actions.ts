@@ -67,14 +67,34 @@ export const getRooms = async (search?: string) => {
   }
 };
 
-export const getUserRooms = async (userId: string) => {
+export const getUserRooms = async ({
+  userId,
+  search,
+}: {
+  userId: string;
+  search: string;
+}) => {
   const rooms = await prisma.room.findMany({ where: { userId } });
-  return rooms;
+
+  if (!search) {
+    return rooms;
+  } else {
+    const filteredRooms = rooms.filter((room) =>
+      room.tags.some((tag) => tag.toLowerCase().includes(search))
+    );
+    return filteredRooms;
+  }
 };
 
 export const getRoom = async (id: string) => {
   const room = await prisma.room.findUnique({ where: { id } });
   return room;
+};
+
+export const deleteRoom = async (roomId: string) => {
+  await prisma.room.delete({ where: { id: roomId } });
+
+  revalidatePath("/room/my-rooms");
 };
 
 export const getToken = async () => {

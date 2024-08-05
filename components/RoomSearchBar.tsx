@@ -7,19 +7,25 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { SearchIcon, X } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { getRooms } from "@/lib/actions";
-import { useState } from "react";
-import { Room } from "@prisma/client";
+import { Bookmark, Globe, Home, SearchIcon, X } from "lucide-react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
+
+const navLinks = [
+  { name: "All Rooms", link: "/rooms", icon: <Globe className="w-4" /> },
+  { name: "My Rooms", link: "/rooms/my-rooms", icon: <Home className="w-4" /> },
+  {
+    name: "Favourites",
+    link: "/rooms/favourites",
+    icon: <Bookmark className="w-4" />,
+  },
+];
 
 const formSchema = z.object({
   searchQuery: z.string(),
@@ -28,6 +34,9 @@ const formSchema = z.object({
 const RoomSearchBar = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const path = usePathname();
+
+  console.log(path);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -38,9 +47,9 @@ const RoomSearchBar = () => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (!values.searchQuery) {
-      router.push("/rooms");
+      router.push(path);
     } else {
-      router.push(`rooms/?search=${values.searchQuery}`);
+      router.push(`?search=${values.searchQuery}`);
     }
   }
 
@@ -83,15 +92,21 @@ const RoomSearchBar = () => {
       </Form>
       <div className="flex flex-col items-center gap-4">
         <div className="flex">
-          <Button variant="link" className="text-white text-base">
-            <Link href="/rooms">All Rooms</Link>
-          </Button>
-          <Button variant="link" className="text-white text-base">
-            <Link href="/rooms/my-rooms">My Rooms</Link>
-          </Button>
-          <Button variant="link" className="text-white text-base">
-            <Link href="favourites">Favourites</Link>
-          </Button>
+          {navLinks.map((item) => {
+            return (
+              <Button
+                key={item.name}
+                variant="link"
+                className={cn(
+                  `text-base flex items-center gap-1`,
+                  path === item.link ? "text-white" : "text-gray-400"
+                )}
+              >
+                {item.icon}
+                <Link href={item.link}>{item.name}</Link>
+              </Button>
+            );
+          })}
         </div>
         {searchParams.get("search") && (
           <div
