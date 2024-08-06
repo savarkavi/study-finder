@@ -1,8 +1,11 @@
+import { currentUser } from "@clerk/nextjs/server";
 import RoomCard from "./RoomCard";
-import { getRooms } from "@/lib/actions";
+import { getBookmarks, getRooms } from "@/lib/actions";
 
 const AllRoomsContainer = async ({ search }: { search: string }) => {
+  const user = await currentUser();
   const rooms = await getRooms(search?.toLowerCase());
+  const bookmarks = await getBookmarks(user?.publicMetadata.userId as string);
 
   if (!rooms || rooms.length === 0) {
     return (
@@ -13,7 +16,7 @@ const AllRoomsContainer = async ({ search }: { search: string }) => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 justify-center gap-4">
       {rooms.map((room) => {
-        return <RoomCard key={room.id} data={room} />;
+        return <RoomCard key={room.id} data={room} bookmarks={bookmarks} />;
       })}
     </div>
   );

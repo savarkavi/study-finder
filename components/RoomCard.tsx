@@ -1,6 +1,6 @@
 "use client";
 
-import { Room } from "@prisma/client";
+import { Bookmark, Room } from "@prisma/client";
 import Link from "next/link";
 import { BackgroundGradient } from "./aceternityui/background-gradient";
 import { Button } from "./ui/button";
@@ -10,17 +10,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { usePathname, useRouter } from "next/navigation";
-import { Ellipsis, Loader, Pencil, Trash } from "lucide-react";
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { useRouter } from "next/navigation";
+import { BookmarkIcon, Loader, Pencil, Trash } from "lucide-react";
 
 import {
   AlertDialog,
@@ -34,24 +25,25 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-
 import { useState } from "react";
-import { deleteRoom } from "@/lib/actions";
+import { deleteRoom, makeOrRemoveBookmark } from "@/lib/actions";
 import toast from "react-hot-toast";
+import CreateRoomForm from "./CreateRoomForm";
+import { cn } from "@/lib/utils";
+import { useUser } from "@clerk/nextjs";
 
-const RoomCard = ({ data, isMyRoom }: { data: Room; isMyRoom?: boolean }) => {
-  // const [deleteModelOpen, setDeleteModelOpen] = useState(false);
-  // const [dropdownMenuOpen, setDropdownMenuOpen] = useState(false);
+const RoomCard = ({
+  data,
+  isMyRoom,
+  bookmarks,
+}: {
+  data: Room;
+  isMyRoom?: boolean;
+  bookmarks?: Bookmark[];
+}) => {
   const [deleteLoader, setDeleteLoader] = useState(false);
   const router = useRouter();
+  const { user } = useUser();
 
   const onTagClick = (tag: string) => {
     router.push(`/rooms?search=${tag}`);
@@ -70,6 +62,19 @@ const RoomCard = ({ data, isMyRoom }: { data: Room; isMyRoom?: boolean }) => {
     }
   };
 
+  const handleMakeAndRemoveBookmark = async () => {
+    try {
+      const res = await makeOrRemoveBookmark({
+        userId: user?.publicMetadata.userId as string,
+        roomId: data.id,
+      });
+      toast.success(res);
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong");
+    }
+  };
+
   return (
     <BackgroundGradient
       className="w-full max-w-[400px] mx-auto"
@@ -80,73 +85,64 @@ const RoomCard = ({ data, isMyRoom }: { data: Room; isMyRoom?: boolean }) => {
           <TooltipProvider delayDuration={0}>
             <Tooltip>
               <TooltipTrigger className="w-[250px] text-left">
-                <h1 className="text-4xl font-bold truncate ...">{data.name}</h1>
+                <h1 className="text-2xl sm:text-4xl font-bold truncate ...">
+                  {data.name}
+                </h1>
                 <TooltipContent>{data.name}</TooltipContent>
               </TooltipTrigger>
             </Tooltip>
           </TooltipProvider>
           {isMyRoom && (
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <Ellipsis />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="flex flex-col">
-                <DropdownMenuItem asChild>
-                  <AlertDialog>
-                    <AlertDialogTrigger>
-                      <div className="flex items-center gap-2 p-2 text-sm">
-                        <Trash className="w-4" />
-                        Delete Room
-                      </div>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>
-                          Are you absolutely sure?
-                        </AlertDialogTitle>
-                        <AlertDialogDescription>
-                          This action cannot be undone. This will permanently
-                          delete your room.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={() => handleRoomDelete(data.id)}
-                          className="flex justify-center items-center w-[100px]"
-                        >
-                          {deleteLoader ? <Loader className="w-4" /> : "Delete"}
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Dialog>
-                    <DialogTrigger>
-                      <div className="flex items-center gap-2 p-2 text-sm">
-                        <Pencil className="w-4" />
-                        Edit Room
-                      </div>
-                    </DialogTrigger>
-                    <DialogContent>
-                      <DialogHeader>
-                        <DialogTitle>Are you absolutely sure?</DialogTitle>
-                        <DialogDescription>
-                          This action cannot be undone. This will permanently
-                          delete your account and remove your data from our
-                          servers.
-                        </DialogDescription>
-                      </DialogHeader>
-                    </DialogContent>
-                  </Dialog>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <div className="flex items-center">
+              <AlertDialog>
+                <AlertDialogTrigger>
+                  <div className="flex items-center gap-2 p-2 text-sm">
+                    <Trash className="w-4" />
+                  </div>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Are you absolutely sure?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. This will permanently delete
+                      your room.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() => handleRoomDelete(data.id)}
+                      className="flex justify-center items-center w-[100px]"
+                    >
+                      {deleteLoader ? <Loader className="w-4" /> : "Delete"}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+              <CreateRoomForm data={data}>
+                <div className="flex items-center gap-2 p-2 text-sm cursor-pointer">
+                  <Pencil className="w-4" />
+                </div>
+              </CreateRoomForm>
+            </div>
+          )}
+          {!isMyRoom && (
+            <BookmarkIcon
+              className={cn(
+                "w-5 cursor-pointer",
+                bookmarks?.find((bookmark) => bookmark.roomId === data.id) &&
+                  "fill-white"
+              )}
+              onClick={handleMakeAndRemoveBookmark}
+            />
           )}
         </div>
         <div className="flex flex-col gap-4 mt-8 overflow-y-scroll">
-          <p className="font-semibold">{data.description}</p>
+          <p className="text-sm sm:text-base font-semibold">
+            {data.description}
+          </p>
           <p>Primary Language: {data.language}</p>
           <div className="flex flex-wrap gap-2">
             {data.tags.map((tag: string, i) => (

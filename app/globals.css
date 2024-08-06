@@ -83,6 +83,10 @@
   color: white;
 }
 
+.str-video__participant-list {
+  color: white;
+}
+
 ::-webkit-scrollbar {
   width: 6px;
 }

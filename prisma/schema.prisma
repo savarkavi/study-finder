@@ -8,20 +8,30 @@ datasource db {
 }
 
 model User {
-  id       String @id @default(cuid())
-  name     String
-  username String
-  email    String
-  rooms    Room[]
+  id        String     @id @default(cuid())
+  name      String
+  username  String
+  email     String
+  rooms     Room[]
+  bookmarks Bookmark[]
 }
 
 model Room {
-  id          String   @id @default(cuid())
+  id          String     @id @default(cuid())
   name        String
   description String
   githubLink  String
   language    String
   tags        String[]
   userId      String
-  user        User     @relation(fields: [userId], references: [id])
+  user        User       @relation(fields: [userId], references: [id])
+  bookmark    Bookmark[]
+}
+
+model Bookmark {
+  id     String @id @default(cuid())
+  userId String
+  roomId String
+  user   User   @relation(fields: [userId], references: [id])
+  room   Room   @relation(fields: [roomId], references: [id])
 }

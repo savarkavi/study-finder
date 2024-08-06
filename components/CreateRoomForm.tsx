@@ -33,6 +33,7 @@ import { useUser } from "@clerk/nextjs";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import { Loader } from "lucide-react";
+import { Room } from "@prisma/client";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Room name is required" }).max(50),
@@ -42,18 +43,24 @@ const formSchema = z.object({
   githubLink: z.string().min(1, { message: "Githib link is required" }),
 });
 
-const CreateRoomForm = () => {
+const CreateRoomForm = ({
+  children,
+  data,
+}: {
+  children: React.ReactNode;
+  data?: Room;
+}) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      desc: "",
-      language: "",
-      tags: "",
-      githubLink: "",
+      name: data?.name || "",
+      desc: data?.description || "",
+      language: data?.language || "",
+      tags: data?.tags.join(", ") || "",
+      githubLink: data?.githubLink || "",
     },
   });
 
@@ -72,6 +79,7 @@ const CreateRoomForm = () => {
         tags: tags ? tags : [],
         githubLink: values.githubLink,
         userId: user?.publicMetadata.userId as string,
+        roomId: data?.id || undefined,
       });
       toast.success("Room created");
       setOpen(false);
@@ -86,12 +94,12 @@ const CreateRoomForm = () => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button size="sm">Create Room</Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px] z-[999]">
         <DialogHeader>
-          <DialogTitle>Create a Room</DialogTitle>
+          <DialogTitle>
+            {data ? "Update your room" : "Create a Room"}
+          </DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -199,7 +207,13 @@ const CreateRoomForm = () => {
               type="submit"
               className="flex justify-center items-center w-24"
             >
-              {loading ? <Loader className="w-4 h-4 animate-spin" /> : "Create"}
+              {loading ? (
+                <Loader className="w-4 h-4 animate-spin" />
+              ) : data ? (
+                "Update"
+              ) : (
+                "Create"
+              )}
             </Button>
           </form>
         </Form>

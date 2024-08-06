@@ -41,7 +41,9 @@ const Header = ({ className }: { className?: string }) => {
           </SignedOut>
           <SignedIn>
             <div className="flex items-center gap-4">
-              <CreateRoomForm />
+              <CreateRoomForm>
+                <Button size="sm">Create Room</Button>
+              </CreateRoomForm>
               <UserButton />
             </div>
           </SignedIn>

@@ -17,7 +17,7 @@ const RoomPage = async ({ params: { id } }: { params: { id: string } }) => {
   return (
     <main className="w-full min-h-screen bg-gradient-to-r from-[#0f0c29] via-[#302b63] to-[#24243e]">
       <Header className="bg-[#24243e]" />
-      <div className="xl:flex justify-between xl:p-16 gap-10 relative">
+      <div className="flex flex-col xl:flex-row justify-between xl:p-16 gap-10 relative">
         <VideoPlayer room={room} />
         <RoomSidebar room={room} />
       </div>

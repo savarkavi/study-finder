@@ -1,14 +1,16 @@
+import { getBookmarkedRooms, getBookmarks } from "@/lib/actions";
 import { currentUser } from "@clerk/nextjs/server";
 import RoomCard from "./RoomCard";
-import { getUserRooms } from "@/lib/actions";
 
-const MyRoomsContainer = async ({ search }: { search: string }) => {
+const FavouritesRoomContainer = async ({ search }: { search: string }) => {
   const user = await currentUser();
 
-  const rooms = await getUserRooms({
+  const rooms = await getBookmarkedRooms({
     userId: user?.publicMetadata.userId as string,
     search,
   });
+
+  const bookmarks = await getBookmarks(user?.publicMetadata.userId as string);
 
   if (!rooms || rooms.length === 0) {
     return (
@@ -19,10 +21,10 @@ const MyRoomsContainer = async ({ search }: { search: string }) => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 justify-center gap-4">
       {rooms.map((room) => {
-        return <RoomCard key={room.id} data={room} isMyRoom />;
+        return <RoomCard key={room.id} data={room} bookmarks={bookmarks} />;
       })}
     </div>
   );
 };
 
-export default MyRoomsContainer;
+export default FavouritesRoomContainer;

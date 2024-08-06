@@ -1,7 +1,16 @@
+"use client";
+
 import { Room } from "@prisma/client";
-import { GitBranch, Github } from "lucide-react";
+import { Github } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const RoomSidebar = ({ room }: { room: Room }) => {
+  const router = useRouter();
+
+  const onTagClick = (tag: string) => {
+    router.push(`/rooms?search=${tag}`);
+  };
+
   return (
     <div className="flex-[20%] text-white border rounded-xl p-8 h-[500px] bg-[#0f0c29] sticky top-0 right-0 overflow-y-scroll">
       <div className="flex flex-col gap-8">
@@ -17,7 +26,8 @@ const RoomSidebar = ({ room }: { room: Room }) => {
             return (
               <div
                 key={i}
-                className="px-3 py-1 rounded-3xl bg-[#302b63] text-sm"
+                className="px-3 py-1 rounded-3xl bg-[#302b63] text-sm cursor-pointer hover:bg-[#24243e]"
+                onClick={() => onTagClick(tag)}
               >
                 {tag.trim()}
               </div>
