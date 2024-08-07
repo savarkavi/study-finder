@@ -11,7 +11,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useRouter } from "next/navigation";
-import { BookmarkIcon, Loader, Pencil, Trash } from "lucide-react";
+import { BookmarkIcon, Github, Loader, Pencil, Trash } from "lucide-react";
 
 import {
   AlertDialog,
@@ -48,6 +48,8 @@ const RoomCard = ({
   const onTagClick = (tag: string) => {
     router.push(`/rooms?search=${tag}`);
   };
+
+  console.log(data.id);
 
   const handleRoomDelete = async (roomId: string) => {
     try {
@@ -139,11 +141,14 @@ const RoomCard = ({
             />
           )}
         </div>
-        <div className="flex flex-col gap-4 mt-8 overflow-y-scroll">
+        <div className="flex flex-col gap-6 mt-8 overflow-y-scroll">
           <p className="text-sm sm:text-base font-semibold">
             {data.description}
           </p>
           <p>Primary Language: {data.language}</p>
+          <Link href={data.githubLink} className="flex gap-1">
+            <Github /> Github Repo
+          </Link>
           <div className="flex flex-wrap gap-2">
             {data.tags.map((tag: string, i) => (
               <span
@@ -155,9 +160,8 @@ const RoomCard = ({
               </span>
             ))}
           </div>
-          <p>Github Repo: {data.githubLink}</p>
         </div>
-        <Button variant="secondary" className="mt-8 w-full">
+        <Button variant="secondary" className="mt-8 w-full" asChild>
           <Link href={`/room/${data.id}`}>Join</Link>
         </Button>
       </div>
