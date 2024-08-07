@@ -52,20 +52,20 @@ export const createRoom = async ({
       });
 
       revalidatePath("/room/my-rooms");
-    } else {
-      await prisma.room.create({
-        data: {
-          name,
-          description,
-          language,
-          tags,
-          githubLink,
-          userId,
-        },
-      });
-
-      revalidatePath("/rooms");
     }
+  } else {
+    await prisma.room.create({
+      data: {
+        name,
+        description,
+        language,
+        tags,
+        githubLink,
+        userId,
+      },
+    });
+
+    revalidatePath("/rooms");
   }
 };
 
