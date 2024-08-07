@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
-import Header from "@/components/Header";
-import { BackgroundGradientAnimation } from "@/components/aceternityui/background-gradient-animation";
 import { Toaster } from "react-hot-toast";
+import NextTopLoader from "nextjs-toploader";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,7 +20,10 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning={true}>
-        <body className={`${inter.className} min-h-screen`}>
+        <body
+          className={`${inter.className} min-h-screen bg-gradient-to-r from-[#6C00A2] to-[#001152]`}
+        >
+          <NextTopLoader />
           <main className="min-h-screen">{children}</main>
           <Toaster />
         </body>
