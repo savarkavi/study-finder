@@ -42,28 +42,30 @@ export const createRoom = async ({
   userId,
   roomId,
 }: IRoom) => {
-  const room = await prisma.room.findUnique({ where: { id: roomId } });
+  if (roomId) {
+    const room = await prisma.room.findUnique({ where: { id: roomId } });
 
-  if (room) {
-    await prisma.room.update({
-      where: { id: roomId },
-      data: { name, description, language, tags, githubLink, userId },
-    });
+    if (room) {
+      await prisma.room.update({
+        where: { id: roomId },
+        data: { name, description, language, tags, githubLink, userId },
+      });
 
-    revalidatePath("/room/my-rooms");
-  } else {
-    await prisma.room.create({
-      data: {
-        name,
-        description,
-        language,
-        tags,
-        githubLink,
-        userId,
-      },
-    });
+      revalidatePath("/room/my-rooms");
+    } else {
+      await prisma.room.create({
+        data: {
+          name,
+          description,
+          language,
+          tags,
+          githubLink,
+          userId,
+        },
+      });
 
-    revalidatePath("/rooms");
+      revalidatePath("/rooms");
+    }
   }
 };
 
